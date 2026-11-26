@@ -174,8 +174,8 @@ customElements.define('atlas-figure',AtlasFigure);
 </header>
 <main class="layout"><section class="graph" aria-label="Interactive theorem graph">
 <canvas id="network" role="img" aria-label="Theorem network. Click a dot to select a theorem; use mouse wheel to zoom and drag to pan."></canvas>
-<div class="graphhead"><strong id="mapTitle">Full theorem map</strong><span id="mapSubtitle">108 records · documented logical links</span></div>
-<div class="hint">Drag to pan · Scroll to zoom · Click a dot to select a theorem · Arrowheads point from the more general result to a special case</div>
+<div class="graphhead"><strong id="mapTitle">Full theorem map</strong><span id="mapSubtitle">108 records · grouped by family</span></div>
+<div class="hint">Drag to pan · Scroll to zoom · Click a dot to select a theorem</div>
 </section><aside class="panel" aria-label="Selected theorem details">
 <h2 id="selectedTitle"></h2><div class="meta" id="selectedMeta"></div>
 <button type="button" id="openMathRecord" class="p1-graph-open">View complete mathematical record →</button><div class="eyebrow">Theorem family</div><div id="family"></div>
@@ -278,7 +278,7 @@ function build(){pos.clear();const logic=allLogical();currentComparison=null;
   visibleNodes=[byId.get(a),byId.get(b)].filter(Boolean);visibleEdges=edge.length?edge:unresolved.map(o=>({source:o.a,target:o.b,type:'open',reason:o.question,missing:o.missing}));pos.set(a,{x:-230,y:0});pos.set(b,{x:230,y:0});currentComparison={edge,unresolved};
  }
  updateMapLabel();updateButtons();updatePanel();fit();}
-function updateMapLabel(){const heads={all:'Full theorem map',focus:'Logical neighborhood · '+selected,shared:'Shared hypotheses · '+selected,compare:'Comparison · '+selected+' / '+compareWith};$('mapTitle').textContent=heads[mode];const count=visibleEdges.filter(e=>e.type==='open').length;$('mapSubtitle').textContent=visibleNodes.length+' theorem records · '+visibleEdges.length+' visible links'+(count?' ('+count+' unresolved)':'')}
+function updateMapLabel(){const heads={all:'Full theorem map',focus:'Logical neighborhood · '+selected,shared:'Shared hypotheses · '+selected,compare:'Comparison · '+selected+' / '+compareWith};$('mapTitle').textContent=heads[mode];const count=visibleEdges.filter(e=>e.type==='open').length;$('mapSubtitle').textContent=mode==='all'?visibleNodes.length+' theorem records · grouped by family':visibleNodes.length+' theorem records · '+visibleEdges.length+' visible links'+(count?' ('+count+' unresolved)':'');document.querySelector('.graph .hint').textContent=mode==='all'?'Drag to pan · Scroll to zoom · Click a dot to select a theorem':'Drag to pan · Scroll to zoom · Click a dot to select a theorem · Arrowheads point from the more general result to a special case'}
 function updateButtons(){for(const [id,key] of [['btnAll','all'],['btnNeighborhood','focus'],['btnShared','shared']])$(id).classList.toggle('active',mode===key)}
 function edgeTitle(e){return e.type==='documented'?'Documented generalization':e.type==='transitive'?'Transitive logical consequence':e.type==='shared'?'Shared hypothesis descriptors (not implication)':'Unresolved comparison (no implication certified)'}
 function edgeExplanation(e){if(e.type==='documented')return e.scope||e.reason||'';if(e.type==='transitive')return e.reason;if(e.type==='shared')return e.common.map(tag).join(' · ');return e.reason||''}
@@ -316,7 +316,7 @@ function draw(){ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
  if(mode==='all'){
   for(const f of fams){const a=visibleNodes.filter(n=>n.family===f);if(!a.length)continue;let cx=0,cy=0;a.forEach(n=>{const p=at(n.id);cx+=p[0];cy+=p[1]});cx/=a.length;cy/=a.length;ctx.globalAlpha=.76;ctx.fillStyle=famColor.get(f);ctx.font='600 12px system-ui';ctx.textAlign='center';const title=f.length>42?f.slice(0,41)+'…':f;ctx.fillText(title,cx,cy-58);ctx.globalAlpha=1}
  }
- for(const e of visibleEdges)drawEdge(e);
+ if(mode!=='all')for(const e of visibleEdges)drawEdge(e);
  for(const n of visibleNodes){const [x,y]=at(n.id);if(x<-100||y<-100||x>W+100||y>H+100)continue;const active=n.id===selected,r=mode==='all'?(active?11:5.8):active?18:12;
   ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fillStyle=active?'#173a53':famColor.get(n.family);ctx.fill();if(active){ctx.strokeStyle='#b0d4d4';ctx.lineWidth=4;ctx.stroke()}
   if(mode!=='all'||active||scale>1.15){ctx.textAlign='center';ctx.font=(active?'700 13px':'600 11px')+' system-ui';ctx.fillStyle='#1a4059';ctx.fillText(n.id,x,y-r-9);if(mode!=='all'&&visibleNodes.length<13){ctx.font='11px system-ui';ctx.fillStyle='#5a7383';const name=n.name.length>35?n.name.slice(0,34)+'…':n.name;ctx.fillText(name,x,y+r+16)}}
