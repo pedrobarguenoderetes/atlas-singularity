@@ -157,7 +157,7 @@ window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],macr
 window.atlasMathReady=new Promise(resolve=>{window.atlasMathLoaded=resolve;});
 </script>
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" onload="window.atlasMathLoaded()" onerror="window.atlasMathLoaded()"></script>
-<style>#drows .theorem-statement{font:inherit;line-height:1.55;overflow-wrap:break-word}#drows .theorem-statement p{margin:.65em 0;white-space:normal!important}#drows .theorem-statement strong{font-weight:650}#drows .theorem-statement mjx-container{max-width:100%}#drows details[open]{min-width:min(25rem,60vw)}</style></head><body>
+<style>#drows .theorem-statement{font:inherit;line-height:1.55;overflow-wrap:break-word}#drows .theorem-statement p{margin:.65em 0;white-space:normal!important}#drows .theorem-statement strong{font-weight:650}#drows .theorem-statement mjx-container{max-width:100%}#drows details[open]{min-width:min(25rem,60vw)}</style><style>#networkLegend[hidden]{display:none!important}.legend i.directed{position:relative}.legend i.directed::after{content:"";position:absolute;right:-1px;top:-5px;border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:6px solid var(--blue)}.legend i.trans.directed::after{border-left-color:var(--teal)}</style></head><body>
 <header>
 <h1>Atlas of Singularity Theorems <span style="font:400 14px system-ui;color:#6e8492">— interactive research atlas</span></h1>
 <p class="lead">Explore 108 theorem records, read their transcribed mathematical statements, filter indexed terminology and inspect cautious side-by-side comparisons. </p>
@@ -176,6 +176,7 @@ window.atlasMathReady=new Promise(resolve=>{window.atlasMathLoaded=resolve;});
   <label class="checkbox"><input type="checkbox" id="transitive" checked> Include transitive links</label>
 </div>
 <div id="message" role="status" aria-live="polite"></div>
+<div class="legend" id="networkLegend" hidden aria-label="Legend for theorem relationships"><span><i class="directed"></i>Documented generalization</span><span><i class="trans directed"></i>Transitive consequence</span><span><i class="shared"></i>Shared descriptors (not an implication)</span><span><i class="open"></i>Unresolved comparison (no implication certified)</span></div>
 
 </header>
 <main class="layout"><section class="graph" aria-label="Interactive theorem graph">
@@ -285,7 +286,7 @@ function build(){pos.clear();const logic=allLogical();currentComparison=null;
  }
  updateMapLabel();updateButtons();updatePanel();fit();}
 function updateMapLabel(){const heads={all:'Full theorem map',focus:'Logical neighborhood · '+selected,shared:'Shared hypotheses · '+selected,compare:'Comparison · '+selected+' / '+compareWith};$('mapTitle').textContent=heads[mode];const count=visibleEdges.filter(e=>e.type==='open').length;$('mapSubtitle').textContent=mode==='all'?visibleNodes.length+' theorem records · grouped by family':visibleNodes.length+' theorem records · '+visibleEdges.length+' visible links'+(count?' ('+count+' unresolved)':'');document.querySelector('.graph .hint').textContent=mode==='all'?'Drag to pan · Scroll to zoom · Click a dot to select a theorem':'Drag to pan · Scroll to zoom · Click a dot to select a theorem · Arrowheads point from the more general result to a special case'}
-function updateButtons(){for(const [id,key] of [['btnAll','all'],['btnNeighborhood','focus'],['btnShared','shared']])$(id).classList.toggle('active',mode===key)}
+function updateButtons(){for(const [id,key] of [['btnAll','all'],['btnNeighborhood','focus'],['btnShared','shared']])$(id).classList.toggle('active',mode===key);$('networkLegend').hidden=mode==='all'}
 function edgeTitle(e){return e.type==='documented'?'Documented generalization':e.type==='transitive'?'Transitive logical consequence':e.type==='shared'?'Shared hypothesis descriptors (not implication)':'Unresolved comparison (no implication certified)'}
 function edgeExplanation(e){if(e.type==='documented')return e.scope||e.reason||'';if(e.type==='transitive')return e.reason;if(e.type==='shared')return e.common.map(tag).join(' · ');return e.reason||''}
 function updatePanel(){const n=byId.get(selected);$('selectedTitle').textContent=n.id+' · '+n.name;
