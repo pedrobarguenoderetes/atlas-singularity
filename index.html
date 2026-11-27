@@ -24,7 +24,7 @@ h2{font:600 20px/1.25 Georgia,serif;margin:0 0 10px;color:#1b4159}.meta{font-siz
 .neigh{width:100%;text-align:left;display:block;padding:9px 10px;margin:7px 0;background:#fbfdfd;border:1px solid #dae5e9;border-left:4px solid var(--blue);border-radius:7px;min-height:0;font-weight:normal}
 .neigh.transitive{border-left-color:var(--teal)}.neigh.open{border-left-color:var(--open)}.neigh.shared{border-left-color:#649892}.neigh:hover{background:#f0f7f8}
 .neigh strong{display:block;font-size:13px;color:#214a62}.neigh small{display:block;font-size:11px;color:#587385;font-weight:600;margin-top:3px}.neigh em{display:block;font-size:11px;color:#526d7d;font-style:normal;margin-top:4px;line-height:1.4}
-.legend{display:flex;flex-wrap:wrap;gap:8px 17px;font-size:11px;color:#5c7484;padding-top:11px;align-items:center}.legend i{display:inline-block;vertical-align:middle;width:25px;margin-right:5px;border-top:2px solid var(--blue)}.legend i.trans{border-color:var(--teal)}.legend i.shared{border-color:#649892;border-top-style:dotted}.legend i.open{border-color:var(--open);border-top-style:dashed}
+.legend{display:flex;flex-wrap:wrap;gap:8px 17px;font-size:11px;color:#5c7484;padding-top:11px;align-items:center}.legend i{display:inline-block;vertical-align:middle;width:43px;margin-right:8px;border-top:2.5px solid var(--blue)}.legend i.trans{border-color:#b45309;border-top-style:dashed}.legend i.shared{border-color:#649892;border-top-style:dotted}.legend i.open{border-color:var(--open);border-top-style:dashed}
 #message{min-height:1.3em;font-size:12px;color:#a35024;margin-top:5px}.source{color:#226085;text-decoration:underline}
 hr{border:0;border-top:1px solid #e2eaee;margin:17px 0}footer{max-width:1630px;margin:auto;padding:0 15px 10px;font-size:11.5px;color:#688092}
 .notice{font-size:12px;line-height:1.45;background:#f1f6f8;border-left:3px solid #8baabc;padding:9px 11px;margin:10px 0;border-radius:3px}
@@ -157,7 +157,7 @@ window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],macr
 window.atlasMathReady=new Promise(resolve=>{window.atlasMathLoaded=resolve;});
 </script>
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" onload="window.atlasMathLoaded()" onerror="window.atlasMathLoaded()"></script>
-<style>#drows .theorem-statement{font:inherit;line-height:1.55;overflow-wrap:break-word}#drows .theorem-statement p{margin:.65em 0;white-space:normal!important}#drows .theorem-statement strong{font-weight:650}#drows .theorem-statement mjx-container{max-width:100%}#drows details[open]{min-width:min(25rem,60vw)}</style><style>#networkLegend[hidden]{display:none!important}.legend i.directed{position:relative}.legend i.directed::after{content:"";position:absolute;right:-1px;top:-5px;border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:6px solid var(--blue)}.legend i.trans.directed::after{border-left-color:var(--teal)}</style></head><body>
+<style>#drows .theorem-statement{font:inherit;line-height:1.55;overflow-wrap:break-word}#drows .theorem-statement p{margin:.65em 0;white-space:normal!important}#drows .theorem-statement strong{font-weight:650}#drows .theorem-statement mjx-container{max-width:100%}#drows details[open]{min-width:min(25rem,60vw)}</style><style>#networkLegend[hidden]{display:none!important}.legend i.directed{position:relative}.legend i.directed::after{content:"";position:absolute;right:-1px;top:-5px;border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:6px solid var(--blue)}.legend i.trans.directed::after{border-left-color:#b45309}</style></head><body>
 <header>
 <h1>Atlas of Singularity Theorems <span style="font:400 14px system-ui;color:#6e8492">— interactive research atlas</span></h1>
 <p class="lead">Explore 108 theorem records, read their transcribed mathematical statements, filter indexed terminology and inspect cautious side-by-side comparisons. </p>
@@ -312,10 +312,10 @@ function fit(){const list=[...pos.values()];if(!list.length)return;const x0=Math
 const at=id=>{const p=pos.get(id);return [p.x*scale+tx,p.y*scale+ty]};
 function drawEdge(e){if(!pos.has(e.source)||!pos.has(e.target))return;const a=at(e.source),b=at(e.target),dx=b[0]-a[0],dy=b[1]-a[1],d=Math.hypot(dx,dy);if(d<1)return;const ux=dx/d,uy=dy/d;const r=mode==='all'?7:mode==='compare'?24:14;const sx=a[0]+ux*r,sy=a[1]+uy*r,ex=b[0]-ux*r,ey=b[1]-uy*r;
  const highlighted=e.source===selected||e.target===selected;
- const stroke=e.type==='documented'?'#32658a':e.type==='transitive'?'#187b76':e.type==='shared'?'#6daba0':'#a1adb5';ctx.lineWidth=mode==='all'?(highlighted?2.0:1.2):e.type==='open'?1.5:2.2;ctx.strokeStyle=stroke;ctx.fillStyle=stroke;ctx.globalAlpha=mode==='all'?(highlighted?0.98:0.63):e.type==='open'?.76:.90;
+ const stroke=e.type==='documented'?'#32658a':e.type==='transitive'?'#b45309':e.type==='shared'?'#6daba0':'#a1adb5';ctx.lineWidth=mode==='all'?(highlighted?2.0:1.2):e.type==='open'?1.5:2.2;ctx.strokeStyle=stroke;ctx.fillStyle=stroke;ctx.globalAlpha=mode==='all'?(highlighted?0.98:0.63):e.type==='open'?.76:.90;
  const curve=mode==='all'?Math.min(55,d*.08)*(e.type==='transitive'?-1:1):0;
  const cx=(sx+ex)/2-uy*curve,cy=(sy+ey)/2+ux*curve;
- ctx.beginPath();ctx.moveTo(sx,sy);ctx.quadraticCurveTo(cx,cy,ex,ey);ctx.setLineDash(e.type==='shared'?[2,5]:e.type==='open'?[6,5]:[]);ctx.stroke();ctx.setLineDash([]);
+ ctx.beginPath();ctx.moveTo(sx,sy);ctx.quadraticCurveTo(cx,cy,ex,ey);ctx.setLineDash(e.type==='transitive'?[10,5]:e.type==='shared'?[2,5]:e.type==='open'?[6,5]:[]);ctx.stroke();ctx.setLineDash([]);
  if(e.type==='documented'||e.type==='transitive'){const ax=ex-cx,ay=ey-cy,alen=Math.hypot(ax,ay)||1,vx=ax/alen,vy=ay/alen;const size=mode==='all'?7:10;ctx.beginPath();ctx.moveTo(ex,ey);ctx.lineTo(ex-size*vx+size*.5*vy,ey-size*vy-size*.5*vx);ctx.lineTo(ex-size*vx-size*.5*vy,ey-size*vy+size*.5*vx);ctx.closePath();ctx.fill()}
  ctx.globalAlpha=1;
 }
